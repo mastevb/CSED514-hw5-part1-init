@@ -86,6 +86,6 @@ if __name__ == '__main__':
             vaccinedb = covid(dbcursor, vaccines)
             # Ass patients
             # Schedule the patients
-            
+            covid.AddDoses(dbcursor, 1, 30)
             # Test cases done!
             clear_tables(sqlClient)
