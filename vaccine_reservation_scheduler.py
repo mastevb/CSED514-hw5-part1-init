@@ -82,8 +82,8 @@ if __name__ == '__main__':
             #     caregivers[cgid] = cg
 
             # Add a vaccine and Add doses to inventory of the vaccine
-            vaccines = {'Moderna': 50, 'Pfizer': 100, 'JohnsonJohnson': 100}
-            vaccinedb = covid(dbcursor, vaccines)
+            #vaccines = {'Moderna': 50, 'Pfizer': 100, 'JohnsonJohnson': 100}
+            #vaccinedb = covid(dbcursor, vaccines)
             # Ass patients
             # Schedule the patients
             covid.AddDoses(dbcursor, 1, 30)
