@@ -8,7 +8,7 @@ from sql_connection_manager import SqlConnectionManager
 from vaccine_caregiver import VaccineCaregiver
 from enums import *
 from utils import *
-# from covid19_vaccine import COVID19Vaccine as covid
+from COVID19_vaccine import COVID19Vaccine as covid
 # from vaccine_patient import VaccinePatient as patient
 
 
@@ -23,7 +23,7 @@ class VaccineReservationScheduler:
         Should return 0 if no slot is available  or -1 if there is a database error'''
         # Note to students: this is a stub that needs to replaced with your code
         self.slotSchedulingId = 0
-        self.getAppointmentSQL = "SELECT something..."
+        self.getAppointmentSQL = "SELECT CareGiverSchedule.CaregiverSlotSchedulingId FROM CareGiverSchedule"
         try:
             cursor.execute(self.getAppointmentSQL)
             cursor.connection.commit()
@@ -73,15 +73,17 @@ if __name__ == '__main__':
             dbcursor = sqlClient.cursor(as_dict=True)
 
             # Iniialize the caregivers, patients & vaccine supply
-            caregiversList = []
-            caregiversList.append(VaccineCaregiver('Carrie Nation', dbcursor))
-            caregiversList.append(VaccineCaregiver('Clare Barton', dbcursor))
-            caregivers = {}
-            for cg in caregiversList:
-                cgid = cg.caregiverId
-                caregivers[cgid] = cg
+            # caregiversList = []
+            # caregiversList.append(VaccineCaregiver('Carrie Nation', dbcursor))
+            # caregiversList.append(VaccineCaregiver('Clare Barton', dbcursor))
+            # caregivers = {}
+            # for cg in caregiversList:
+            #     cgid = cg.caregiverId
+            #     caregivers[cgid] = cg
 
             # Add a vaccine and Add doses to inventory of the vaccine
+            vaccines = {'Moderna': 50, 'Pfizer': 100, 'JohnsonJohnson': 100}
+            vaccinedb = covid(dbcursor, vaccines)
             # Ass patients
             # Schedule the patients
             
