@@ -69,20 +69,32 @@ CREATE PROCEDURE InitDataModel AS
 			CONSTRAINT FK_VaccineId FOREIGN KEY (VaccineId)
 				REFERENCES Vaccines(VaccineId));'
 	EXEC (@SQLString6)
-	GO
 
-EXECUTE InitDataModel;
+-- EXEC InitDataModel;
+
+-- DROP Procedure InitDataModel;
+
+-- CREATE PROCEDURE DropTables @TableNamePrepend VARCHAR(128) AS
+-- 	DECLARE @SQLString0 NVARCHAR(MAX)
+-- 	SET @SQLString0 = 'Drop Table ' + @TableNamePrepend  + '_CareGiverSchedule
+-- Drop Table ' + @TableNamePrepend  + '_AppointmentStatusCodes
+-- Drop Table ' + @TableNamePrepend  + '_Caregivers
+-- Drop Table ' + @TableNamePrepend  + '_VaccineAppointment
+-- Drop Table ' + @TableNamePrepend  + '_Patients
+-- Drop Table ' + @TableNamePrepend  + '_Vaccines'
+-- 	EXEC (@SQLString0)
+--	G
 
 -- Additional helper code for your use if needed
 
--- --- Drop commands to restructure the DB
--- Drop Table CareGiverSchedule
--- Drop Table AppointmentStatusCodes
--- Drop Table Caregivers
--- Drop Table VaccineAppointment
--- Drop Table Patients
--- Drop Table Vaccines 
--- Drop Procedure InitDataModel
+-- -- --- Drop commands to restructure the DB
+-- Drop Table CareGiverSchedule;
+-- Drop Table AppointmentStatusCodes;
+-- Drop Table Caregivers;
+-- Drop Table VaccineAppointment;
+-- Drop Table Patients;
+-- Drop Table Vaccines;
+-- Drop Procedure InitDataModel;
 -- Go
 
 -- --- Commands to clear the active database Tables for unit testing

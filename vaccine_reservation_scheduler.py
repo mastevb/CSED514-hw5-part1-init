@@ -82,11 +82,11 @@ if __name__ == '__main__':
             #     caregivers[cgid] = cg
 
             # Add a vaccine and Add doses to inventory of the vaccine
-            #vaccines = {'Moderna': {'inventory': 100, 'shotsnecessary': 2}, 'Pfizer': {'inventory': 100, 'shotsnecessary': 2}, 'JohnsonJohnson': {'inventory': 100, 'shotsnecessary': 1}}
-            #vaccinedb = covid(dbcursor, vaccines)
+            vaccines = {'Moderna': {'inventory': 100, 'shotsnecessary': 2}, 'Pfizer': {'inventory': 100, 'shotsnecessary': 2}, 'JohnsonJohnson': {'inventory': 100, 'shotsnecessary': 1}}
+            vaccinedb = covid(dbcursor, vaccines)
             # Ass patients
             # Schedule the patients
             #covid.AddDoses(dbcursor, 1, 30)
             # Test cases done!
-            covid.ReserveDoses(dbcursor, 2)
+            #covid.ReserveDoses(dbcursor, 2)
             clear_tables(sqlClient)

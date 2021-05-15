@@ -19,6 +19,8 @@ class COVID19Vaccine:
           print("SQL text that resulted in an Error: " + self.sqltext)
 
     def AddDoses(cursor, vaccineid, new_inventory):
+        if new_inventory < 0:
+            raise Exception('New inventory must be greater than zero.')
         try:
             sqltext = "SELECT inventory FROM Vaccines WHERE vaccineid=%s"
             cursor.execute(sqltext, (vaccineid))
@@ -35,12 +37,10 @@ class COVID19Vaccine:
     def ReserveDoses(cursor, VaccineAppointmentId):
         try:
             sqltext = "SELECT va.vaccineid AS vaccineid, va.firstshot as firstshot, v.shotsnecessary AS shotsnecessary, v.inventory AS inventory, v.reserved AS reserved FROM VaccineAppointment as va, Vaccines as v, CareGiverSchedule as cgs, AppointmentStatusCodes as statuscode WHERE va.vaccineid=v.vaccineid AND cgs.VaccineAppointmentId=va.VaccineAppointmentId AND statuscode.StatusCodeId=cgs.SlotStatus AND cgs.VaccineAppointmentId=%s AND statuscode.StatusCode='Open'"
-            cursor.execute(sqltext, (VaccineAppointmentId))
+            cursor.execute(sqltext, (str(VaccineAppointmentId)))
             row = cursor.fetchone()
             current_inventory = row['inventory']
-            print(current_inventory)
             shots_necessary = row['shotsnecessary']
-            print(shots_necessary)
             is_first_shot = row['firstshot']
             current_reserved = row['reserved'] 
             vaccineid = row['vaccineid']
