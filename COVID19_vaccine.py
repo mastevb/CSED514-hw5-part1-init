@@ -4,12 +4,16 @@ class COVID19Vaccine:
     def __init__(self, cursor, init_vaccines):
         vaccine_names = list(init_vaccines.keys())
         vaccine_inv = list(init_vaccines.values())
+        vaccine_suppliers = [x['Supplier'] for x in vaccine_inv]
         vaccine_inventory = [x['inventory'] for x in vaccine_inv]
         vaccine_shotsnecessary = [x['shotsnecessary'] for x in vaccine_inv]
+        vaccine_dayslower = [x['DaysBetweenDosesLower'] for x in vaccine_inv]
+        vaccine_daysupper = [x['DaysBetweenDosesUpper'] for x in vaccine_inv]
+
         try:
             for i in range(len(vaccine_names)):
-                self.sqltext = "INSERT INTO Vaccines (Name, inventory, reserved, shotsnecessary) VALUES (%s, %s, %s, %s)"
-                cursor.execute(self.sqltext, ((vaccine_names[i]), (str(vaccine_inventory[i])), (0), (str(vaccine_shotsnecessary[i]))))
+                self.sqltext = "INSERT INTO Vaccines (VaccineName, VaccineSupplier, AvailableDoses, ReservedDoses, TotalDoses, DosesPerPatient, DaysBetweenDosesLower, DaysBetweenDosesUpper) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+                cursor.execute(self.sqltext, ((vaccine_suppliers[i]), (vaccine_names[i]), (str(vaccine_inventory[i])), (str(0)), (str(vaccine_inventory[i])), (str(vaccine_shotsnecessary[i])), (str(vaccine_dayslower[i])), (str(vaccine_daysupper[i]))))
                 cursor.connection.commit()
         except pymssql.Error as db_err:
           print("Database Programming Error in SQL Query processing for Vaccines! ")
@@ -18,18 +22,16 @@ class COVID19Vaccine:
               print("Exception message: " + db_err.args[1])
           print("SQL text that resulted in an Error: " + self.sqltext)
 
-    def AddDoses(cursor, vaccineid, new_inventory):
+    def AddDoses(cursor, vaccinename, new_inventory):
         if new_inventory < 0:
             raise Exception('New inventory must be greater than zero.')
         try:
-            sqltext = "SELECT inventory FROM Vaccines WHERE vaccineid=%s"
-            cursor.execute(sqltext, (vaccineid))
-            row = cursor.fetchone()
-            current_inventory = row['inventory']
-            sqltext = "UPDATE Vaccines SET inventory=%s WHERE vaccineid=%s"
-            cursor.execute(sqltext, ((current_inventory + new_inventory), (vaccineid)))
+            sqltext = "UPDATE Vaccines SET AvailableDoses = AvailableDoses + %s WHERE VaccineName=%s"
+            cursor.execute(sqltext, ((new_inventory), (vaccinename)))
+            sqltext = "UPDATE Vaccines SET TotalDoses = TotalDoses + %s WHERE VaccineName=%s"
+            cursor.execute(sqltext, ((new_inventory), (vaccinename)))
             cursor.connection.commit()
-            print("Successfully added %s doses to vaccineid %s", new_inventory, vaccineid)
+            print("Successfully added %s doses to vaccineid %s", new_inventory, vaccinename)
         except pymssql.Error as db_err:
             print("ERROR: Could not add new doses. Pymssql error: " + db_err.args[1])
         return None
