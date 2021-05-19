@@ -64,10 +64,10 @@ class VaccineReservationScheduler:
         if slotid < 1:
             return -2
         self.slotSchedulingId = slotid
-        self.updateAppointmentSQL = "UPDATE VaccineAppointment SET SlotStatus=2 WHERE VaccineAppointmentId=%s"
-        self.getPatientId = "SELECT VA.PatientId FROM VaccineAppointment AS VA WHERE VA.VaccineAppointmentId=%s"
-        self.updatePatientsSQL = "UPDATE Patients SET VaccineStatus=2 WHERE PatientId=%s"
-        self.updateCaregiverSQL = "UPDATE CareGiverSchedule SET SlotStatus=2 WHERE VaccineAppointmentId=%s"
+        self.updateAppointmentSQL = "UPDATE VaccineAppointment SET SlotStatus=SlotStatus+1 WHERE VaccineAppointmentId=%s"
+        self.getPatientId = "SELECT PatientId FROM VaccineAppointment WHERE VaccineAppointmentId=%s"
+        self.updatePatientsSQL = "UPDATE Patients SET VaccineStatus=VaccineStatus+1 WHERE PatientId=%s"
+        self.updateCaregiverSQL = "UPDATE CareGiverSchedule SET SlotStatus=SlotStatus+1 WHERE VaccineAppointmentId=%s"
         try:
             cursor.execute(self.getAppointmentSQL, (str(slotid)))
             cursor.execute(self.getPatientId)
