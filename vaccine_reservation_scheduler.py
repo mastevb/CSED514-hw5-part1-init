@@ -28,15 +28,20 @@ class VaccineReservationScheduler:
                                    Password=os.getenv("Password")) as sqlClient:
             dbcursor = sqlClient.cursor(as_dict=True)
             # Setting inventory to zero
-            self.sqltext = "SELECT TOP 1 CaregiverSlotSchedulingId FROM CareGiverSchedule WHERE WorkDay==%s AND  SlotTime BETWEEN  %$ AND %s ORDER BY SlotTime ASC"
+            self.sqltext = "SELECT TOP 1 CaregiverSlotSchedulingId FROM CareGiverSchedule WHERE WorkDay=%s AND  SlotTime BETWEEN  %$ AND %s ORDER BY SlotTime ASC"
             try:
                 dbcursor.execute(self.sqltext, Date, TimeLower, TimeUpper)
                 rows = dbcursor.fetchone()
                 slot_id = rows['CaregiverSlotSchedulingId']
                 cursor.connection.commit()
 
+                # No appointments available
                 if slot_id is None:
                     return 0
+
+                # Update status CaregiverSchedule to OnHold (statusCodeId=1, StatusCode='OnHold')
+                self.updateCaregiverSQL = "UPDATE CareGiverSchedule SET SlotStatus=1 WHERE CaregiverSlotSchedulingId=%s"
+                cursor.execute(self.updateCaregiverSQL, (str(slotid)))
 
                 return slot_id
             
