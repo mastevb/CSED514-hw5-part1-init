@@ -38,19 +38,21 @@ class COVID19Vaccine:
 
     def ReserveDoses(cursor, VaccineAppointmentId):
         try:
-            sqltext = "SELECT va.vaccineid AS vaccineid, va.firstshot as firstshot, v.shotsnecessary AS shotsnecessary, v.inventory AS inventory, v.reserved AS reserved FROM VaccineAppointment as va, Vaccines as v, CareGiverSchedule as cgs, AppointmentStatusCodes as statuscode WHERE va.vaccineid=v.vaccineid AND cgs.VaccineAppointmentId=va.VaccineAppointmentId AND statuscode.StatusCodeId=cgs.SlotStatus AND cgs.VaccineAppointmentId=%s AND statuscode.StatusCode='Open'"
-            cursor.execute(sqltext, (str(VaccineAppointmentId)))
+            sqltext = "SELECT va.VaccineName AS vaccinename, va.DoseNumber as DoseNumber, v.DosesPerPatient AS shotsnecessary, v.AvailableDoses AS inventory, v.ReservedDoses AS reserved FROM VaccineAppointments as va, Vaccines as v, CareGiverSchedule as cgs WHERE va.VaccineName=v.VaccineName AND cgs.VaccineAppointmentId=va.VaccineAppointmentId  AND cgs.VaccineAppointmentId=1 '"
+            cursor.execute(sqltext, (VaccineAppointmentId))
             row = cursor.fetchone()
             current_inventory = row['inventory']
+            print(current_inventory)
             shots_necessary = row['shotsnecessary']
-            is_first_shot = row['firstshot']
+            print(shots_necessary)
+            is_first_shot = row['DoseNumber']
             current_reserved = row['reserved'] 
-            vaccineid = row['vaccineid']
+            vaccineid = row['vaccinename']
 
             if shots_necessary > current_inventory: 
                 raise Exception( "Not enough vaccines. Please try a different vaccine or another vaccine!")
             else:
-                sqltext = "UPDATE Vaccines SET inventory=%s, reserved=%s WHERE vaccineid=%s"
+                sqltext = "UPDATE Vaccines SET AvailableDoses=%s, ReservedDoses=%s WHERE VaccineName=%s"
                 if is_first_shot==1: 
                     cursor.execute(sqltext, ((current_inventory - shots_necessary), (current_reserved + shots_necessary), (vaccineid)))
                     cursor.connection.commit()
@@ -59,3 +61,4 @@ class COVID19Vaccine:
         except pymssql.Error as db_err:
             print("ERROR: Could not reserve new doses. Pymssql error: " + db_err.args[1])
         return None
+
