@@ -10,6 +10,9 @@ class COVID19Vaccine:
         vaccine_dayslower = [x['DaysBetweenDosesLower'] for x in vaccine_inv]
         vaccine_daysupper = [x['DaysBetweenDosesUpper'] for x in vaccine_inv]
 
+        def __init__():
+            return None
+
         try:
             for i in range(len(vaccine_names)):
                 self.sqltext = "INSERT INTO Vaccines (VaccineName, VaccineSupplier, AvailableDoses, ReservedDoses, TotalDoses, DosesPerPatient, DaysBetweenDosesLower, DaysBetweenDosesUpper) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
